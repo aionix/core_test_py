@@ -1,3 +1,4 @@
+import allure
 from selenium.common.exceptions import NoSuchElementException
 
 from model.group import Group
@@ -12,6 +13,7 @@ class GroupHelper:
         driver = self.app.driver
         driver.find_element_by_link_text("group page").click()
 
+    @allure.step
     def create_group(self, group):
         driver = self.app.driver
         driver.find_element_by_name("new").click()
@@ -46,7 +48,7 @@ class GroupHelper:
         driver = self.app.driver
         driver.find_element_by_name("selected[]").click()
 
-
+    @allure.step
     def modify_first_group(self, new_group_data):
         driver = self.app.driver
         self.open_groups_page()
@@ -67,6 +69,7 @@ class GroupHelper:
         except NoSuchElementException as e: return False
         return True
 
+    @allure.step
     def get_group_list(self):
         driver = self.app.driver
         self.open_groups_page()

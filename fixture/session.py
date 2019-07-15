@@ -1,13 +1,21 @@
+import allure
 
-class SessionHelper:
+from webdriver_wrapper import WebDriverWrapper
+
+
+class SessionHelper(WebDriverWrapper):
+    # def __init__(self, app):
+    #     super().__init__(self.app.driver)
     def __init__(self, app):
         self.app = app
 
 
+    @allure.step
     def open_home_page(self):
         driver = self.app.driver
         driver.get("http://localhost:8090/addressbook/group.php")
 
+    @allure.step
     def login(self, username, password):
         driver = self.app.driver
         driver.find_element_by_name("user").click()
@@ -21,3 +29,8 @@ class SessionHelper:
     def logout(self):
         driver = self.app.driver
         driver.find_element_by_xpath("//a[text()='Logout']").click()
+
+    def asd(self):
+        self.open_home_page()
+        self.wait_for_element_by_css("input[name=searchstring]", 10)
+

@@ -9,10 +9,14 @@
 #         app2.driver.find_element_by_id("lst-ib").send_keys("selenium")
 #         app2.driver.find_element_by_css_selector("input[name='btnK']").click()
 #         sleep(2)
+from fixture.application import Application
+
 
 def test_use_helper(app):
-    app.session.open_home_page()
-    app.session.login(username="admin", password="secret")
+    #app.session.open_home_page()
+    app.session.asd()
+
+
 
 
 

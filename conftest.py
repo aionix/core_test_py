@@ -1,6 +1,9 @@
 import json
+import time
 
+import allure
 import pytest
+from allure_commons.types import AttachmentType
 
 from fixture.application import Application
 
@@ -21,7 +24,24 @@ def app(request):
     return fixture
 
 
-@pytest.fixture(autouse=True)
+@pytest.mark.tryfirst
+def pytest_runtest_makereport(item, call, __multicall__):
+    rep = __multicall__.execute()
+    setattr(item, "rep_" + rep.when, rep)
+    return rep
+
+@pytest.fixture(scope="function", autouse=True)
+def screenshot_on_failure(request):
+    def fin():
+        if request.node.rep_setup.failed:
+            allure.attach(fixture.driver.get_screenshot_as_png(), name="Screenshot", attachment_type=AttachmentType.PNG)
+        elif request.node.rep_setup.passed:
+            if request.node.rep_call.failed:
+                allure.attach(fixture.driver.get_screenshot_as_png(), name="Screenshot", attachment_type=AttachmentType.PNG)
+    request.addfinalizer(fin)
+
+
+@pytest.fixture(scope="session", autouse=True)
 def stop(request):
     def fin():
         if fixture is not None:
@@ -33,6 +53,4 @@ def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--target", action="store", default="target.json")
 
-@pytest.fixture()
-def attach_screen(request):
-    yield True
+
